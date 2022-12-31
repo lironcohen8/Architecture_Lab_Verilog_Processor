@@ -251,59 +251,57 @@ module CTL(
 						ctl_state <= `CTL_STATE_FETCH0;
 					end
 				
-			end
-            
+			end    
 	   endcase // ctl_state
-	   
-	 end // !reset
+	  end // !reset
     end // @posedge(clk)
 	
-	always @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE or dma_state)
+	always @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE)
 		begin
 			sram_ADDR = 0;
 			sram_DI = 0;
 			sram_EN = 0;
 			sram_WE = 0;
 		
-			case(ctl_state)
-		
-			`CTL_STATE_FETCH0:
-				begin
-					sram_ADDR = pc;
-					sram_DI = 0;
-					sram_EN = 1;
-					sram_WE = 0;
-				end
+			case (ctl_state)
 			
-			`CTL_STATE_EXEC0:
-				begin
-					if (opcode == `LD)
-						begin
-							sram_ADDR = alu1[15:0];
-							sram_DI = 0;
-							sram_EN = 1;
-							sram_WE = 0;
-						end
-				end
-			
-			`CTL_STATE_EXEC1:
-				begin
-					if (opcode == `ST)
-						begin
-							sram_ADDR = alu1[15:0];
-							sram_DI = alu0;
-							sram_EN = 1;
-							sram_WE = 1;
-						end
-				end
-			
-			default:
-				begin
-					sram_ADDR = 0;
-					sram_DI = 0;
-					sram_EN = 0;
-					sram_WE = 0;
-				end
-     	endcase // ctl_state
-	end // @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE or dma_state)
+				`CTL_STATE_FETCH0:
+					begin
+						sram_ADDR = pc;
+						sram_DI = 0;
+						sram_EN = 1;
+						sram_WE = 0;
+					end
+				
+				`CTL_STATE_EXEC0:
+					begin
+						if (opcode == `LD)
+							begin
+								sram_ADDR = alu1[15:0];
+								sram_DI = 0;
+								sram_EN = 1;
+								sram_WE = 0;
+							end
+					end
+				
+				`CTL_STATE_EXEC1:
+					begin
+						if (opcode == `ST)
+							begin
+								sram_ADDR = alu1[15:0];
+								sram_DI = alu0;
+								sram_EN = 1;
+								sram_WE = 1;
+							end
+					end
+				
+				default:
+					begin
+						sram_ADDR = 0;
+						sram_DI = 0;
+						sram_EN = 0;
+						sram_WE = 0;
+					end
+			endcase // ctl_state
+		end // @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE or dma_state)
 endmodule // CTL
