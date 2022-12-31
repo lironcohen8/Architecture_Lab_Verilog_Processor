@@ -236,7 +236,7 @@ module CTL(
 							if (dst == 6) r6 <= sram_DO;	
 							if (dst == 7) r7 <= sram_DO;
 						end
-					`
+					
 				endcase // opcode
 				
 				if (opcode == `HLT)

@@ -1,0 +1,108 @@
+xrun(64): 21.09-s006: (c) Copyright 1995-2022 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	21.09-s006: Started on Dec 31, 2022 at 12:43:26 IST
+xrun
+	+access+rw
+	alu.v
+	ctl.v
+	sp.v
+	sram_tb.v
+	sram.v
+	top.v
+DEFINE rfTlineLib $(compute:THIS_TOOL_INST_ROOT)/tools/dfII/samples/artist/rfTlineLib
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,8): cds.lib Invalid path '/tools/cadence/XCELIUM/21.09.006/tools/dfII/samples/artist/rfTlineLib' (cds.lib command ignored).
+SOFTINCLUDE $EMXHOME/emxinterface/cds.lib
+|
+xrun: *W,DLCVAR (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,14): cds.lib Invalid environment variable ''.
+DEFINE Cadence_libs ./Cadence_libs
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,16): cds.lib Permission denied '/a/../../../tools/cadence/IC/06.18.230/tools/dfII/local/Cadence_libs' (cds.lib command ignored).
+ASSIGN Cadence_libs COMBINE analogLib rfLib rfExamples ahdlLib passiveLib basic US_8ths rfTlineLib
+|
+xrun: *W,DLCLIB (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,17): cds.lib Library not defined 'Cadence_libs' (cds.lib command ignored).
+DEFINE rfTlineLib $(compute:THIS_TOOL_INST_ROOT)/tools/dfII/samples/artist/rfTlineLib
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,8): cds.lib Invalid path '/tools/cadence/XCELIUM/21.09.006/tools/dfII/samples/artist/rfTlineLib' (cds.lib command ignored).
+SOFTINCLUDE $EMXHOME/emxinterface/cds.lib
+|
+xrun: *W,DLCVAR (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,14): cds.lib Invalid environment variable ''.
+DEFINE Cadence_libs ./Cadence_libs
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,16): cds.lib Permission denied '/a/../../../tools/cadence/IC/06.18.230/tools/dfII/local/Cadence_libs' (cds.lib command ignored).
+ASSIGN Cadence_libs COMBINE analogLib rfLib rfExamples ahdlLib passiveLib basic US_8ths rfTlineLib
+|
+xrun: *W,DLCLIB (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,17): cds.lib Library not defined 'Cadence_libs' (cds.lib command ignored).
+DEFINE rfTlineLib $(compute:THIS_TOOL_INST_ROOT)/tools/dfII/samples/artist/rfTlineLib
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,8): cds.lib Invalid path '/tools/cadence/XCELIUM/21.09.006/tools/dfII/samples/artist/rfTlineLib' (cds.lib command ignored).
+SOFTINCLUDE $EMXHOME/emxinterface/cds.lib
+|
+xrun: *W,DLCVAR (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,14): cds.lib Invalid environment variable ''.
+DEFINE Cadence_libs ./Cadence_libs
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,16): cds.lib Permission denied '/tools/cadence/IC/06.18.230/tools/dfII/local/Cadence_libs' (cds.lib command ignored).
+ASSIGN Cadence_libs COMBINE analogLib rfLib rfExamples ahdlLib passiveLib basic US_8ths rfTlineLib
+|
+xrun: *W,DLCLIB (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,17): cds.lib Library not defined 'Cadence_libs' (cds.lib command ignored).
+DEFINE rfTlineLib $(compute:THIS_TOOL_INST_ROOT)/tools/dfII/samples/artist/rfTlineLib
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,8): cds.lib Invalid path '/tools/cadence/XCELIUM/21.09.006/tools/dfII/samples/artist/rfTlineLib' (cds.lib command ignored).
+SOFTINCLUDE $EMXHOME/emxinterface/cds.lib
+|
+xrun: *W,DLCVAR (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,14): cds.lib Invalid environment variable ''.
+DEFINE Cadence_libs ./Cadence_libs
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,16): cds.lib Permission denied '/tools/cadence/IC/06.18.230/tools/dfII/local/Cadence_libs' (cds.lib command ignored).
+ASSIGN Cadence_libs COMBINE analogLib rfLib rfExamples ahdlLib passiveLib basic US_8ths rfTlineLib
+|
+xrun: *W,DLCLIB (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,17): cds.lib Library not defined 'Cadence_libs' (cds.lib command ignored).
+DEFINE rfTlineLib $(compute:THIS_TOOL_INST_ROOT)/tools/dfII/samples/artist/rfTlineLib
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,8): cds.lib Invalid path '/tools/cadence/XCELIUM/21.09.006/tools/dfII/samples/artist/rfTlineLib' (cds.lib command ignored).
+SOFTINCLUDE $EMXHOME/emxinterface/cds.lib
+|
+xrun: *W,DLCVAR (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,14): cds.lib Invalid environment variable ''.
+DEFINE Cadence_libs ./Cadence_libs
+|
+xrun: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,16): cds.lib Permission denied '/a/../../../tools/cadence/IC/06.18.230/tools/dfII/local/Cadence_libs' (cds.lib command ignored).
+ASSIGN Cadence_libs COMBINE analogLib rfLib rfExamples ahdlLib passiveLib basic US_8ths rfTlineLib
+|
+xrun: *W,DLCLIB (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,17): cds.lib Library not defined 'Cadence_libs' (cds.lib command ignored).
+DEFINE rfTlineLib $(compute:THIS_TOOL_INST_ROOT)/tools/dfII/samples/artist/rfTlineLib
+|
+xmvlog: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,8): cds.lib Invalid path '/tools/cadence/XCELIUM/21.09.006/tools/dfII/samples/artist/rfTlineLib' (cds.lib command ignored).
+SOFTINCLUDE $EMXHOME/emxinterface/cds.lib
+|
+xmvlog: *W,DLCVAR (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,14): cds.lib Invalid environment variable ''.
+DEFINE Cadence_libs ./Cadence_libs
+|
+xmvlog: *W,DLCPTH (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,16): cds.lib Permission denied '/a/../../../tools/cadence/IC/06.18.230/tools/dfII/local/Cadence_libs' (cds.lib command ignored).
+ASSIGN Cadence_libs COMBINE analogLib rfLib rfExamples ahdlLib passiveLib basic US_8ths rfTlineLib
+|
+xmvlog: *W,DLCLIB (/tools/cadence/IC/06.18.230/tools/dfII/local/cds.lib,17): cds.lib Library not defined 'Cadence_libs' (cds.lib command ignored).
+file: alu.v
+	module worklib.ALU:v
+		errors: 0, warnings: 0
+file: ctl.v
+	module worklib.CTL:v
+		errors: 0, warnings: 0
+file: sp.v
+	module worklib.SP:v
+		errors: 0, warnings: 0
+file: sram_tb.v
+	module worklib.top:v
+		errors: 0, warnings: 0
+file: sram.v
+	module worklib.SRAM:v
+		errors: 0, warnings: 0
+file: top.v
+module top;
+         |
+xmvlog: *W,RECOME (top.v,4|9): recompiling design unit worklib.top:v.
+	First compiled from line 6 of sram_tb.v.
+xmvlog: *E,DUPUNI: Unit "worklib.top:v" multiply defined in files "sram_tb.v" and "top.v".
+xmvlog: *E,MNPDEC: Module name (top) previously declared. Use -ALLOWREDEFINITION option for duplicate module names.
+	Total errors/warnings found outside modules and primitives:
+		errors: 0, warnings: 4
+xrun: *E,VLGERR: An error occurred during parsing.  Review the log file for errors with the code *E and fix those identified problems to proceed.  Exiting with code (status 1).
+TOOL:	xrun(64)	21.09-s006: Exiting on Dec 31, 2022 at 12:43:27 IST  (total: 00:00:01)
