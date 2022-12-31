@@ -2,6 +2,8 @@
 
 /***********************************
  * CTL module
+ * Liron Cohen 207481268
+ * Yuval Mor 209011543
  **********************************/
 module CTL(
 	   clk,
@@ -63,10 +65,12 @@ module CTL(
 
    /***********************************
     * set up sram inputs (outputs from sp)
-    * 
-    * TODO: fill here
     **********************************/
-
+	reg [15:0] 	sram_ADDR;
+	reg [31:0] 	sram_DI;
+	reg 		sram_EN;
+	reg 		sram_WE;
+	
    // synchronous instructions
    always@(posedge clk)
      begin
@@ -115,20 +119,191 @@ module CTL(
 
 	   cycle_counter <= cycle_counter + 1;
 	   case (ctl_state)
-	     `CTL_STATE_IDLE: begin
+	    `CTL_STATE_IDLE:
+		    begin
                 pc <= 0;
                 if (start)
                   ctl_state <= `CTL_STATE_FETCH0;
-             end
-             /***********************************
-              * TODO: fill here
-              **********************************/
-	   endcase
-	   if (opcode == `HLT) begin
-	      $fclose(verilog_trace_fp);
-	      $writememh("verilog_sram_out.txt", top.SP.SRAM.mem);
-	      $finish;
-	   end
-	end // !reset
-     end // @posedge(clk)
+            end
+			
+		`CTL_STATE_FETCH0:
+		    begin
+	   			ctl_state <= `CTL_STATE_FETCH1;
+	   		end
+			
+		`CTL_STATE_FETCH1:
+			begin
+				// fetching instruction from sram
+				inst <= sram_DO;
+				
+				ctl_state <= `CTL_STATE_DEC0;
+			end
+			
+		`CTL_STATE_DEC0:
+			begin
+				// decoding the instruction
+				opcode <= inst[29:25];
+				dst    <= inst[24:22];
+				src0   <= inst[21:19];
+				src1   <= inst[18:16];
+				
+				// imm sign extension
+				immediate <= { { 16{inst[15]} }, inst[15:0] };
+				
+				ctl_state <= `CTL_STATE_DEC1;
+			end
+			
+		`CTL_STATE_DEC1:
+			begin
+				if (opcode == `LHI) // LHI special case
+					begin
+						// alu0 = dst
+						if (dst == 0) alu0 <= 0;
+						if (dst == 1) alu0 <= immediate;
+						if (dst == 2) alu0 <= r2;
+						if (dst == 3) alu0 <= r3;
+						if (dst == 4) alu0 <= r4;
+						if (dst == 5) alu0 <= r5;
+						if (dst == 6) alu0 <= r6;
+						if (dst == 7) alu0 <= r7;
+						// alu1 = imm
+						alu1 <= immediate; 
+					end
+				
+				else // other instructions
+					begin
+						// alu0 = src0
+						if (src0 == 0) alu0 <= 0; 
+						if (src0 == 1) alu0 <= immediate;
+						if (src0 == 2) alu0 <= r2;
+						if (src0 == 3) alu0 <= r3;
+						if (src0 == 4) alu0 <= r4;
+						if (src0 == 5) alu0 <= r5;
+						if (src0 == 6) alu0 <= r6;
+						if (src0 == 7) alu0 <= r7;
+						
+						// alu1 = src1
+						if (src1 == 0) alu1 <= 0;
+						if (src1 == 1) alu1 <= immediate;
+						if (src1 == 2) alu1 <= r2;
+						if (src1 == 3) alu1 <= r3;
+						if (src1 == 4) alu1 <= r4;
+						if (src1 == 5) alu1 <= r5;
+						if (src1 == 6) alu1 <= r6;
+						if (src1 == 7) alu1 <= r7;
+					end
+				ctl_state <= `CTL_STATE_EXEC0;
+			end
+		
+		`CTL_STATE_EXEC0:
+			begin
+				if (opcode!=`LD && opcode!=`ST && opcode!=`HLT)
+					aluout <= aluout_wire;
+				ctl_state <= `CTL_STATE_EXEC1;
+			end
+			
+		`CTL_STATE_EXEC1:
+			begin
+				// advancing PC
+				pc <= pc + 1;
+				
+				case (opcode)
+					`ADD, `SUB, `AND, `OR, `XOR, `LSF, `RSF, `LHI: 
+						begin
+							if (dst == 2) r2 <= aluout_wire;
+							if (dst == 3) r3 <= aluout_wire;
+							if (dst == 4) r4 <= aluout_wire;
+							if (dst == 5) r5 <= aluout_wire;	
+							if (dst == 6) r6 <= aluout_wire;	
+							if (dst == 7) r7 <= aluout_wire;					
+						end
+						
+					`JEQ, `JLE, `JNE, `JLT, `JIN:
+						begin
+							if (aluout == 1)
+								begin
+									r7 <= pc;
+									pc <= immediate;
+								end
+						end
+						
+					`LD:
+						begin
+							if (dst == 2) r2 <= sram_DO;
+							if (dst == 3) r3 <= sram_DO;	
+							if (dst == 4) r4 <= sram_DO;				  			     		
+							if (dst == 5) r5 <= sram_DO;	
+							if (dst == 6) r6 <= sram_DO;	
+							if (dst == 7) r7 <= sram_DO;
+						end
+					`
+				endcase // opcode
+				
+				if (opcode == `HLT)
+					begin
+						ctl_state <= `CTL_STATE_IDLE;
+					    $fclose(verilog_trace_fp);
+					    $writememh("verilog_sram_out.txt", top.SP.SRAM.mem);
+					    $finish;
+					end
+				else // not HLT
+					begin
+						ctl_state <= `CTL_STATE_FETCH0;
+					end
+				
+			end
+            
+	   endcase // ctl_state
+	   
+	 end // !reset
+    end // @posedge(clk)
+	
+	always @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE or dma_state)
+		begin
+			sram_ADDR = 0;
+			sram_DI = 0;
+			sram_EN = 0;
+			sram_WE = 0;
+		
+			case(ctl_state)
+		
+			`CTL_STATE_FETCH0:
+				begin
+					sram_ADDR = pc;
+					sram_DI = 0;
+					sram_EN = 1;
+					sram_WE = 0;
+				end
+			
+			`CTL_STATE_EXEC0:
+				begin
+					if (opcode == `LD)
+						begin
+							sram_ADDR = alu1[15:0];
+							sram_DI = 0;
+							sram_EN = 1;
+							sram_WE = 0;
+						end
+				end
+			
+			`CTL_STATE_EXEC1:
+				begin
+					if (opcode == `ST)
+						begin
+							sram_ADDR = alu1[15:0];
+							sram_DI = alu0;
+							sram_EN = 1;
+							sram_WE = 1;
+						end
+				end
+			
+			default:
+				begin
+					sram_ADDR = 0;
+					sram_DI = 0;
+					sram_EN = 0;
+					sram_WE = 0;
+				end
+     	endcase // ctl_state
+	end // @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE or dma_state)
 endmodule // CTL

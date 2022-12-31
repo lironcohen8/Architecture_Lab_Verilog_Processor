@@ -2,6 +2,8 @@
 
 /***********************************
  * ALU module
+ * Liron Cohen 207481268
+ * Yuval Mor 209011543
  **********************************/
 module ALU(opcode, alu0, alu1, aluout);
    
@@ -14,9 +16,19 @@ module ALU(opcode, alu0, alu1, aluout);
      begin
 	case (opcode)
 	  `ADD: aluout = alu0 + alu1;
-	  /***********************************
-           * TODO: fill here
-           **********************************/
+	  `SUB: aluout = alu0 - alu1;
+      `LSF: aluout = alu0 << alu1;
+      `RSF: aluout = alu0 >> alu1;
+      `AND: aluout = alu0 & alu1;
+      `OR:  aluout = alu0 | alu1;
+      `XOR: aluout = alu0 ^ alu1;
+      `LHI: aluout = (alu1 << 16) | alu0[15:0];
+      `JLT: aluout = (alu0 < alu1) ? 1 : 0;  
+      `JLE: aluout = (alu0 <= alu1) ? 1 : 0;
+      `JEQ: aluout = (alu0 == alu1) ? 1 : 0;
+      `JNE: aluout = (alu0 != alu1) ? 1 : 0;
+      `JIN: aluout = 1; 
+    default: aluout = 0;
 
 	endcase
      end
