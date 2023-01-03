@@ -70,30 +70,43 @@ module CTL(
 	reg [31:0] 	sram_DI;
 	reg 		sram_EN;
 	reg 		sram_WE;
+
+	reg [15:0] 	dma_source;
+	reg [15:0] 	dma_destination;
+	reg [15:0] 	dma_length;
+	reg [2:0]  	dma_state;
+	reg [31:0] 	dma_data;
+	reg 	  	dma_operation;
 	
    // synchronous instructions
    always@(posedge clk)
      begin
 	if (reset) begin
 	   // registers reset
-	   r2 <= 0;
-	   r3 <= 0;
-	   r4 <= 0;
-	   r5 <= 0;
-	   r6 <= 0;
-	   r7 <= 0;
-	   pc <= 0;
-	   inst <= 0;
-	   opcode <= 0;
-	   dst <= 0;
-	   src0 <= 0;
-	   src1 <= 0;
-	   alu0 <= 0;
-	   alu1 <= 0;
-	   aluout <= 0;
-	   immediate <= 0;
-	   cycle_counter <= 0;
-	   ctl_state <= 0;
+		r2 <= 0;
+		r3 <= 0;
+		r4 <= 0;
+		r5 <= 0;
+		r6 <= 0;
+		r7 <= 0;
+		pc <= 0;
+		inst <= 0;
+		opcode <= 0;
+		dst <= 0;
+		src0 <= 0;
+		src1 <= 0;
+		alu0 <= 0;
+		alu1 <= 0;
+		aluout <= 0;
+		immediate <= 0;
+		cycle_counter <= 0;
+		ctl_state <= 0;
+		dma_source <= 0;
+		dma_destination <= 0;
+		dma_length <= 0;
+		dma_state <= 0;
+		dma_data <= 0;
+		dma_operation <= 0;
 	   
 	end else begin
 	   // generate cycle trace
@@ -116,6 +129,12 @@ module CTL(
 	   $fdisplay(verilog_trace_fp, "aluout %08x", aluout);
 	   $fdisplay(verilog_trace_fp, "cycle_counter %08x", cycle_counter);
 	   $fdisplay(verilog_trace_fp, "ctl_state %08x\n", ctl_state);
+	   $fdisplay(verilog_trace_fp, "dma_state %08x", dma_state);
+	   $fdisplay(verilog_trace_fp, "dma_source %08x", dma_source);
+	   $fdisplay(verilog_trace_fp, "dma_destination %08x", dma_destination);
+	   $fdisplay(verilog_trace_fp, "dma_length %08x", dma_length);
+	   $fdisplay(verilog_trace_fp, "dma_data %08x", dma_data);
+	   $fdisplay(verilog_trace_fp, "dma_operation %08x\n", dma_operation);
 
 	   cycle_counter <= cycle_counter + 1;
 	   case (ctl_state)
@@ -236,11 +255,39 @@ module CTL(
 							if (dst == 6) r6 <= sram_DO;	
 							if (dst == 7) r7 <= sram_DO;
 						end
+					`CPY: 
+						begin
+							if (dma_state == `DMA_STATE_IDLE) begin
+								if (dst == 2) dma_destination <= r2;
+								if (dst == 3) dma_destination <= r3;
+								if (dst == 4) dma_destination <= r4;
+								if (dst == 5) dma_destination <= r5;	
+								if (dst == 6) dma_destination <= r6;	
+								if (dst == 7) dma_destination <= r7;
+							
+								dma_source <= alu0;
+								dma_length <= alu1;
+								dma_state <= `DMA_STATE_FETCH0;
+							end
+						end
+					`POL : 
+						begin
+							if (dst == 2) r2 <= dma_length;
+							if (dst == 3) r3 <= dma_length;	
+							if (dst == 4) r4 <= dma_length;				  			     		
+							if (dst == 5) r5 <= dma_length;	
+							if (dst == 6) r6 <= dma_length;	
+							if (dst == 7) r7 <= dma_length;		
+						end
 					
 				endcase // opcode
 				
 				if (opcode == `HLT)
 					begin
+						if (dma_state != `DMA_STATE_IDLE) begin
+						pc <= pc - 1;
+						end
+					else begin
 						ctl_state <= `CTL_STATE_IDLE;
 					    $fclose(verilog_trace_fp);
 					    $writememh("verilog_sram_out.txt", top.SP.SRAM.mem);
@@ -253,10 +300,32 @@ module CTL(
 				
 			end    
 	   endcase // ctl_state
+
+		case (dma_state)
+				`DMA_STATE_FETCH0 : dma_state <= `DMA_STATE_FETCH1;		
+				`DMA_STATE_FETCH1 : dma_state <= `DMA_STATE_DEC0;
+				`DMA_STATE_DEC0   : dma_state <= `DMA_STATE_DEC1;
+
+				`DMA_STATE_DEC1: begin
+					dma_data  <= (dma_operation == `DMA_READ) ? sram_DO : dma_data;
+					dma_state <= `DMA_STATE_EXEC0;
+				end
+				
+				`DMA_STATE_EXEC0 : dma_state <= `DMA_STATE_EXEC1;
+
+				`DMA_STATE_EXEC1: begin
+					dma_length <= (dma_length != 0) ? dma_length - 1 : dma_length;
+					dma_source 	<= dma_source + 1;
+					dma_destination 	<= dma_destination + 1;
+					dma_state 		<= (dma_length > 0) ? `DMA_STATE_FETCH0 : `DMA_STATE_IDLE;
+				end
+				
+		endcase
+
 	  end // !reset
     end // @posedge(clk)
 	
-	always @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE)
+	always @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE or dma_state)
 		begin
 			sram_ADDR = 0;
 			sram_DI = 0;
@@ -303,5 +372,26 @@ module CTL(
 						sram_WE = 0;
 					end
 			endcase // ctl_state
+
+		if (dma_operation == `DMA_READ) begin
+			if (dma_state == `DMA_STATE_DEC0) begin
+				sram_ADDR = dma_source[15:0];
+				sram_DI = 0;
+				sram_EN = 1;
+				sram_WE = 0;
+				dma_operation = `DMA_WRITE;
+			end
+		end
+		
+		else begin // dma_operation == `DMA_WRITE
+			if (dma_state == `DMA_STATE_DEC1) begin
+				sram_ADDR = dma_destination[15:0];
+				sram_DI = dma_data;
+				sram_EN = 1;
+				sram_WE = 1;
+				dma_operation = `DMA_READ;
+			end
+		end // else
+
 		end // @(ctl_state or sram_ADDR or sram_DI or sram_EN or sram_WE or dma_state)
 endmodule // CTL
