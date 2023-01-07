@@ -7,6 +7,19 @@
 `define CTL_STATE_EXEC0 5
 `define CTL_STATE_EXEC1 6
 
+// DMA states
+`define DMA_STATE_IDLE 0
+`define DMA_STATE_FETCH0 1
+`define DMA_STATE_FETCH1 2
+`define DMA_STATE_DEC0 3
+`define DMA_STATE_DEC1 4
+`define DMA_STATE_EXEC0 5
+`define DMA_STATE_EXEC1 6
+
+
+`define DMA_READ  0
+`define DMA_WRITE 1
+
 // opcodes
 `define ADD 0
 `define SUB 1
@@ -23,4 +36,8 @@
 `define JEQ 18
 `define JNE 19
 `define JIN 20
+
+`define CPY 21
+`define POL 22
+
 `define HLT 24
