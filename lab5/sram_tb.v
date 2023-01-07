@@ -3,7 +3,7 @@
  * Liron Cohen 207481268
  * Yuval Mor 209011543
  ***********************************/
-module top;
+module SRAM_tb;
 
    reg clk;
 

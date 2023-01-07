@@ -1,1 +1,13 @@
 s1(31Dec2022:12:43:26):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s2(07Jan2023:15:11:51):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s3(07Jan2023:15:17:17):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s4(07Jan2023:15:21:39):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s5(07Jan2023:15:49:31):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s6(07Jan2023:16:12:12):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s7(07Jan2023:16:14:13):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s8(07Jan2023:16:20:08):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s9(07Jan2023:16:25:12):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s10(07Jan2023:16:31:41):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s11(07Jan2023:16:44:27):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s12(07Jan2023:16:46:14):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 
+s13(07Jan2023:16:47:30):  xrun +access+rw alu.v ctl.v sp.v sram_tb.v sram.v top.v 

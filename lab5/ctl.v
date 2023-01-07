@@ -129,12 +129,13 @@ module CTL(
 	   $fdisplay(verilog_trace_fp, "aluout %08x", aluout);
 	   $fdisplay(verilog_trace_fp, "cycle_counter %08x", cycle_counter);
 	   $fdisplay(verilog_trace_fp, "ctl_state %08x\n", ctl_state);
-	   $fdisplay(verilog_trace_fp, "dma_state %08x", dma_state);
-	   $fdisplay(verilog_trace_fp, "dma_source %08x", dma_source);
-	   $fdisplay(verilog_trace_fp, "dma_destination %08x", dma_destination);
-	   $fdisplay(verilog_trace_fp, "dma_length %08x", dma_length);
-	   $fdisplay(verilog_trace_fp, "dma_data %08x", dma_data);
-	   $fdisplay(verilog_trace_fp, "dma_operation %08x\n", dma_operation);
+	   // Prints for DMA
+	   // $fdisplay(verilog_trace_fp, "dma_state %08x", dma_state);
+	   // $fdisplay(verilog_trace_fp, "dma_source %08x", dma_source);
+	   // $fdisplay(verilog_trace_fp, "dma_destination %08x", dma_destination);
+	   // $fdisplay(verilog_trace_fp, "dma_length %08x", dma_length);
+	   // $fdisplay(verilog_trace_fp, "dma_data %08x", dma_data);
+	   // $fdisplay(verilog_trace_fp, "dma_operation %08x\n", dma_operation);
 
 	   cycle_counter <= cycle_counter + 1;
 	   case (ctl_state)
@@ -282,22 +283,20 @@ module CTL(
 					
 				endcase // opcode
 				
-				if (opcode == `HLT)
-					begin
-						if (dma_state != `DMA_STATE_IDLE) begin
+				if (opcode == `HLT) begin
+					if (dma_state != `DMA_STATE_IDLE) begin
 						pc <= pc - 1;
-						end
+					end
 					else begin
 						ctl_state <= `CTL_STATE_IDLE;
 					    $fclose(verilog_trace_fp);
 					    $writememh("verilog_sram_out.txt", top.SP.SRAM.mem);
 					    $finish;
 					end
-				else // not HLT
-					begin
-						ctl_state <= `CTL_STATE_FETCH0;
-					end
-				
+				end
+				else begin// not HLT
+					ctl_state <= `CTL_STATE_FETCH0;
+				end
 			end    
 	   endcase // ctl_state
 
